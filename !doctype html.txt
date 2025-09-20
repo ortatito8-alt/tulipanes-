@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tulipanes amarillos — Fondo musical</title>
+  <style>
+    :root{ --bg1:#eaf6ff; --bg2:#f7fff2; --ground:#e6f7e9 }
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(180deg,var(--bg1),var(--bg2));color:#223}
+    .wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;box-sizing:border-box}
+    h1{margin:8px 0 18px;font-size:1.6rem;text-align:center}
+
+    /* Garden card */
+    .card{width:min(960px,95%);background:linear-gradient(180deg,rgba(255,255,255,0.7),rgba(255,255,255,0.85));border-radius:18px;padding:22px;box-shadow:0 10px 30px rgba(20,40,20,0.08);backdrop-filter:blur(6px)}
+
+    .scene{height:420px;width:100%;border-radius:12px;background:linear-gradient(180deg,#bbecff, #eafef7);display:flex;align-items:flex-end;justify-content:center;position:relative;overflow:hidden}
+
+    /* Ground */
+    .ground{position:absolute;left:0;right:0;bottom:0;height:90px;background:linear-gradient(180deg,#e6f7e9,#c8eac8);box-shadow:inset 0 8px 20px rgba(0,0,0,0.06)}
+
+    /* Controls */
+    .controls{display:flex;gap:12px;align-items:center;margin-top:16px}
+    .controls button{background:#1f6bff;color:white;border:none;padding:10px 14px;border-radius:10px;font-weight:600;cursor:pointer;box-shadow:0 6px 18px rgba(31,107,255,0.18)}
+    .controls button.secondary{background:transparent;color:#1f6bff;border:2px solid rgba(31,107,255,0.12);box-shadow:none}
+
+    /* SVG tweaks */
+    svg{width:100%;height:100%}
+    .tulip{transform-origin:50% 100%;filter:url(#softShadow)}
+    .tulip .stem{stroke:#1f6b27;stroke-linecap:round}
+    .tulip .leaf{opacity:0.95}
+
+    /* soft sway animation */
+    .tulip.sway-1{animation:sway 4.5s ease-in-out -0.6s infinite}
+    .tulip.sway-2{animation:sway 5s ease-in-out -1.1s infinite}
+    .tulip.sway-3{animation:sway 4s ease-in-out -0.2s infinite}
+    @keyframes sway{0%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}100%{transform:rotate(-3deg)}}
+
+    /* bloom gloss */
+    .bloom .petal{mix-blend-mode:normal;transition:transform .25s ease}
+    .bloom .center{filter:drop-shadow(0 8px 10px rgba(0,0,0,0.06))}
+
+    /* responsive */
+    @media (max-width:640px){.scene{height:340px}}
+
+    /* tiny instructions */
+    .note{font-size:.9rem;color:#2b4a3b;margin-top:12px}
+
+    /* player area (kept small) */
+    #player{position:fixed;right:18px;bottom:18px;display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+    #player iframe{width:320px;height:180px;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,0.12)}
+    @media (max-width:760px){#player iframe{width:240px;height:135px}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Tulipanes amarillos</h1>
+      <div class="scene" role="img" aria-label="Tulipanes amarillos, fondo suave y música">
+
+        <!-- SVG garden with 3 tulip groups -->
+        <svg viewBox="0 0 1000 520" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="petalGrad" cx="30%" cy="25%">
+              <stop offset="0%" stop-color="#fff9b8" />
+              <stop offset="45%" stop-color="#ffe36b" />
+              <stop offset="100%" stop-color="#f2b914" />
+            </radialGradient>
+
+            <radialGradient id="petalGrad2" cx="40%" cy="30%">
+              <stop offset="0%" stop-color="#fff9c7" />
+              <stop offset="40%" stop-color="#ffd84a" />
+              <stop offset="100%" stop-color="#f0a800" />
+            </radialGradient>
+
+            <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
+              <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#000" flood-opacity="0.15" />
+            </filter>
+
+            <!-- subtle glass gloss for highlights -->
+            <linearGradient id="highlight" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stop-color="rgba(255,255,255,0.8)" />
+              <stop offset="50%" stop-color="rgba(255,255,255,0.15)" />
+              <stop offset="100%" stop-color="rgba(255,255,255,0)" />
+            </linearGradient>
+          </defs>
+
+          <!-- Ground -->
+          <rect x="0" y="430" width="1000" height="120" fill="rgba(200,240,210,1)"/>
+
+          <!-- Tulip 1 (izquierda) -->
+          <g class="tulip sway-1" transform="translate(260,430)">
+            <path class="stem" d="M0,0 C6,-70 10,-120 6,-170" stroke="#1e6b2a" stroke-width="8" fill="none" />
+            <path class="leaf" d="M-8,-80 C-70,-120 -80,-40 -22,-60" fill="#2f9b48" />
+
+            <g class="bloom" transform="translate(0,-170)">
+              <ellipse class="petal left" rx="34" ry="50" transform="rotate(-18) translate(-10,0)" fill="url(#petalGrad)" />
+              <ellipse class="petal right" rx="34" ry="50" transform="rotate(18) translate(10,0)" fill="url(#petalGrad)" />
+              <ellipse class="petal center" rx="32" ry="58" fill="url(#petalGrad2)" />
+              <ellipse rx="18" ry="30" transform="translate(0,-6)" fill="url(#highlight)" opacity="0.6" />
+            </g>
+          </g>
+
+          <!-- Tulip 2 (centro) -->
+          <g class="tulip sway-2" transform="translate(500,430)">
+            <path class="stem" d="M0,0 C2,-80 -4,-130 0,-190" stroke="#1b5f23" stroke-width="9" fill="none" />
+            <path class="leaf" d="M10,-110 C40,-150 20,-60 6,-70" fill="#2f9b48" />
+            <g class="bloom" transform="translate(0,-190)">
+              <ellipse class="petal left" rx="46" ry="62" transform="rotate(-20) translate(-12,0)" fill="url(#petalGrad2)" />
+              <ellipse class="petal right" rx="46" ry="62" transform="rotate(20) translate(12,0)" fill="url(#petalGrad)" />
+              <ellipse class="petal center" rx="40" ry="74" fill="url(#petalGrad2)" />
+              <ellipse rx="22" ry="36" transform="translate(0,-8)" fill="url(#highlight)" opacity="0.65" />
+            </g>
+          </g>
+
+          <!-- Tulip 3 (derecha) -->
+          <g class="tulip sway-3" transform="translate(740,430) scale(0.9)">
+            <path class="stem" d="M0,0 C-6,-65 -8,-115 -4,-160" stroke="#1e6b2a" stroke-width="7" fill="none" />
+            <path class="leaf" d="M-6,-90 C-40,-140 -60,-70 -18,-78" fill="#2f9b48" />
+            <g class="bloom" transform="translate(0,-160)">
+              <ellipse class="petal left" rx="30" ry="46" transform="rotate(-16) translate(-8,0)" fill="url(#petalGrad)" />
+              <ellipse class="petal right" rx="30" ry="46" transform="rotate(16) translate(8,0)" fill="url(#petalGrad2)" />
+              <ellipse class="petal center" rx="28" ry="52" fill="url(#petalGrad2)" />
+              <ellipse rx="16" ry="26" transform="translate(0,-6)" fill="url(#highlight)" opacity="0.6" />
+            </g>
+          </g>
+
+        </svg>
+
+        <div class="ground" aria-hidden="true"></div>
+      </div>
+
+      <div class="controls">
+        <button id="playBtn">Reproducir música (Rauw Alejandro)</button>
+        <button id="muteBtn" class="secondary">Silenciar / Desmutear</button>
+        <div class="note">Consejo: pulsa "Reproducir" una vez para que los navegadores permitan el audio.</div>
+      </div>
+
+      <div style="margin-top:14px;font-size:.95rem;color:#345;line-height:1.4">
+        <strong>Nota técnica:</strong> este archivo es autónomo (index.html). Se usa el video de YouTube que compartiste (ID: <code>qmtLI2RoZJo</code>).
+      </div>
+
+    </div>
+  </div>
+
+  <div id="player" aria-hidden="true"></div>
+
+  <script>
+    const YT_ID = 'qmtLI2RoZJo';  // Aquí ya está tu video
+
+    const playBtn = document.getElementById('playBtn');
+    const muteBtn = document.getElementById('muteBtn');
+    const player = document.getElementById('player');
+
+    function makeEmbed({mute=false,autoplay=true}){
+      const m = mute ? '&mute=1' : '';
+      return `<iframe src="https://www.youtube.com/embed/${YT_ID}?rel=0&controls=1&autoplay=${autoplay?1:0}&loop=1&playlist=${YT_ID}${m}" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+    }
+
+    playBtn.addEventListener('click', ()=>{
+      if(!player.dataset.playing){
+        player.innerHTML = makeEmbed({mute:false,autoplay:true});
+        player.dataset.playing = '1';
+        playBtn.textContent = 'Pausar música';
+      } else {
+        player.innerHTML = '';
+        delete player.dataset.playing;
+        playBtn.textContent = 'Reproducir música (Rauw Alejandro)';
+      }
+    });
+
+    muteBtn.addEventListener('click', ()=>{
+      if(!player.dataset.playing) return;
+      const iframe = player.querySelector('iframe');
+      if(!iframe) return;
+      const muted = player.dataset.muted === '1';
+      player.innerHTML = makeEmbed({mute: !muted, autoplay:true});
+      player.dataset.muted = muted ? '0' : '1';
+      muteBtn.textContent = muted ? 'Silenciar / Desmutear' : 'Desmutear / Silenciar';
+    });
+  </script>
+</body>
+</html>
